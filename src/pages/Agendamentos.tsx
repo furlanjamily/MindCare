@@ -295,351 +295,382 @@ export default function Agendamentos() {
   // agendamentos já vem filtrado da função aplicarFiltros
   const agendamentosFiltrados = agendamentos;
 
-  return (
-    <DashboardLayout>
-      <div className="space-y-6">
-        {/* Título e Botão Novo */}
-        <div className="flex items-center justify-between">
-          <h1 className="text-4xl font-bold text-[#007BFF]">Agenda</h1>
-          {session?.user.role !== 'psicologo' && (
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="bg-[#007BFF] hover:bg-[#0056B3] text-white">
-                  <PlusCircle className="mr-2 h-4 w-4" />
-                  Novo Agendamento
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-2xl">
-                <DialogHeader>
-                  <DialogTitle>Novo Agendamento</DialogTitle>
-                  <DialogDescription>
-                    Crie um novo agendamento. O paciente será automaticamente vinculado ao psicólogo.
-                  </DialogDescription>
-                </DialogHeader>
+return (
+  <DashboardLayout>
+    <div className="space-y-6">
 
-                <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <FormField
-                        control={form.control}
-                        name="paciente_id"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Paciente</FormLabel>
-                            <Select onValueChange={field.onChange} value={field.value}>
-                              <FormControl>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Selecione o paciente" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                {pacientes.map((paciente) => (
-                                  <SelectItem key={paciente.id} value={paciente.id}>
-                                    {paciente.profiles?.nome_completo || "N/A"}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="psicologo_id"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Psicólogo</FormLabel>
-                            <Select onValueChange={field.onChange} value={field.value}>
-                              <FormControl>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Selecione o psicólogo" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                {psicologos.map((psicologo) => (
-                                  <SelectItem key={psicologo.id} value={psicologo.id}>
-                                    {psicologo.nome_completo} - CRP {psicologo.crp}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="data_hora"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Data e Hora</FormLabel>
-                            <FormControl>
-                              <Input type="datetime-local" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="duracao_minutos"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Duração (minutos)</FormLabel>
-                            <FormControl>
-                              <Input type="number" placeholder="50" {...field} value={field.value ?? ""} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="status"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Status</FormLabel>
-                            <Select onValueChange={field.onChange} value={field.value}>
-                              <FormControl>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Status" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                {statusOptions.map((opt) => (
-                                  <SelectItem key={opt.value} value={opt.value}>
-                                    {opt.label}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="valor"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Valor (R$)</FormLabel>
-                            <FormControl>
-                              <Input type="number" step="0.01" placeholder="150.00" {...field} value={field.value ?? ""} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="observacoes"
-                        render={({ field }) => (
-                          <FormItem className="md:col-span-2">
-                            <FormLabel>Observações</FormLabel>
-                            <FormControl>
-                              <Textarea
-                                placeholder="Observações sobre o agendamento..."
-                                {...field}
-                                value={field.value ?? ""}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
+      {/* Título e Botão Novo */}
+      <div className="flex items-center justify-between">
+        <h1 className="text-4xl font-bold text-primary">Agenda</h1>
 
-                    <DialogFooter className="pt-4">
-                      <DialogClose asChild>
-                        <Button type="button" variant="outline">
-                          Cancelar
-                        </Button>
-                      </DialogClose>
-                      <Button type="submit" disabled={isSubmitting} className="bg-[#007BFF] hover:bg-[#0056B3] text-white">
-                        {isSubmitting ? "Salvando..." : "Criar Agendamento"}
+        {session?.user.role !== "psicologo" && (
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="bg-primary hover:bg-primary/80 text-primary-foreground">
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Novo Agendamento
+              </Button>
+            </DialogTrigger>
+
+            <DialogContent className="sm:max-w-2xl">
+              <DialogHeader>
+                <DialogTitle>Novo Agendamento</DialogTitle>
+                <DialogDescription>
+                  Crie um novo agendamento. O paciente será automaticamente
+                  vinculado ao psicólogo.
+                </DialogDescription>
+              </DialogHeader>
+
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="paciente_id"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Paciente</FormLabel>
+                          <Select onValueChange={field.onChange} value={field.value}>
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Selecione o paciente" />
+                              </SelectTrigger>
+                            </FormControl>
+
+                            <SelectContent>
+                              {pacientes.map((paciente) => (
+                                <SelectItem key={paciente.id} value={paciente.id}>
+                                  {paciente.profiles?.nome_completo || "N/A"}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {/* Psicólogo */}
+                    <FormField
+                      control={form.control}
+                      name="psicologo_id"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Psicólogo</FormLabel>
+                          <Select onValueChange={field.onChange} value={field.value}>
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Selecione o psicólogo" />
+                              </SelectTrigger>
+                            </FormControl>
+
+                            <SelectContent>
+                              {psicologos.map((p) => (
+                                <SelectItem key={p.id} value={p.id}>
+                                  {p.nome_completo} - CRP {p.crp}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {/* Data e Hora */}
+                    <FormField
+                      control={form.control}
+                      name="data_hora"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Data e Hora</FormLabel>
+                          <FormControl>
+                            <Input type="datetime-local" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {/* Duração */}
+                    <FormField
+                      control={form.control}
+                      name="duracao_minutos"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Duração (minutos)</FormLabel>
+                          <FormControl>
+                            <Input type="number" placeholder="50" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {/* Status */}
+                    <FormField
+                      control={form.control}
+                      name="status"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Status</FormLabel>
+                          <Select onValueChange={field.onChange} value={field.value}>
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Status" />
+                              </SelectTrigger>
+                            </FormControl>
+
+                            <SelectContent>
+                              {statusOptions.map((opt) => (
+                                <SelectItem key={opt.value} value={opt.value}>
+                                  {opt.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {/* Valor */}
+                    <FormField
+                      control={form.control}
+                      name="valor"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Valor (R$)</FormLabel>
+                          <FormControl>
+                            <Input type="number" step="0.01" placeholder="150.00" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {/* Observações */}
+                    <FormField
+                      control={form.control}
+                      name="observacoes"
+                      render={({ field }) => (
+                        <FormItem className="md:col-span-2">
+                          <FormLabel>Observações</FormLabel>
+                          <FormControl>
+                            <Textarea
+                              placeholder="Observações sobre o agendamento..."
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <DialogFooter className="pt-4">
+                    <DialogClose asChild>
+                      <Button type="button" variant="outline">
+                        Cancelar
                       </Button>
-                    </DialogFooter>
-                  </form>
-                </Form>
-              </DialogContent>
-            </Dialog>
-          )}
+                    </DialogClose>
+
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="bg-primary hover:bg-primary/80 text-primary-foreground"
+                    >
+                      {isSubmitting ? "Salvando..." : "Criar Agendamento"}
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </Form>
+            </DialogContent>
+          </Dialog>
+        )}
+      </div>
+
+      {/* Navegação de Data */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" size="icon" onClick={() => navigateDate("prev")} className="h-8 w-8">
+            <ChevronLeft className="h-4 w-4 text-primary" />
+          </Button>
+
+          <h2 className="text-lg font-semibold text-primary">
+            {formatarDataCompleta(selectedDate).toUpperCase()}
+          </h2>
+
+          <Button variant="ghost" size="icon" onClick={() => navigateDate("next")} className="h-8 w-8">
+            <ChevronRight className="h-4 w-4 text-primary" />
+          </Button>
         </div>
 
-        {/* Navegação de Data */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigateDate("prev")}
-              className="h-8 w-8"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <h2 className="text-lg font-semibold text-[#007BFF]">
-              {formatarDataCompleta(selectedDate).toUpperCase()}
-            </h2>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigateDate("next")}
-              className="h-8 w-8"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
+        {/* Troca de visualização */}
+        <div className="flex items-center gap-2">
+          <Button
+            size="sm"
+            variant={viewMode === "lista" ? "default" : "ghost"}
+            className={viewMode === "lista" ? "bg-primary text-primary-foreground hover:bg-primary/80" : ""}
+            onClick={() => setViewMode("lista")}
+          >
+            Lista
+          </Button>
 
-          {/* Opções de Visualização */}
-          <div className="flex items-center gap-2">
-            <Button
-              variant={viewMode === "lista" ? "default" : "ghost"}
-              size="sm"
-              onClick={() => setViewMode("lista")}
-              className={viewMode === "lista" ? "bg-[#007BFF] hover:bg-[#0056B3] text-white" : ""}
-            >
-              Lista
-            </Button>
-            <Button
-              variant={viewMode === "dia" ? "default" : "ghost"}
-              size="sm"
-              onClick={() => setViewMode("dia")}
-              className={viewMode === "dia" ? "bg-[#007BFF] hover:bg-[#0056B3] text-white" : ""}
-            >
-              Dia
-            </Button>
-            <Button
-              variant={viewMode === "semana" ? "default" : "ghost"}
-              size="sm"
-              onClick={() => setViewMode("semana")}
-              className={viewMode === "semana" ? "bg-[#007BFF] hover:bg-[#0056B3] text-white" : ""}
-            >
-              Semana
-            </Button>
-          </div>
+          <Button
+            size="sm"
+            variant={viewMode === "dia" ? "default" : "ghost"}
+            className={viewMode === "dia" ? "bg-primary text-primary-foreground hover:bg-primary/80" : ""}
+            onClick={() => setViewMode("dia")}
+          >
+            Dia
+          </Button>
+
+          <Button
+            size="sm"
+            variant={viewMode === "semana" ? "default" : "ghost"}
+            className={viewMode === "semana" ? "bg-primary text-primary-foreground hover:bg-primary/80" : ""}
+            onClick={() => setViewMode("semana")}
+          >
+            Semana
+          </Button>
         </div>
+      </div>
 
-        {/* Barra de Filtros */}
-        <div className="flex items-center gap-4 flex-wrap">
-          <span className="text-sm text-muted-foreground">Filtrar por</span>
-          <Select value={filtroStatus} onValueChange={setFiltroStatus}>
-            <SelectTrigger className="w-[150px]">
-              <SelectValue placeholder="Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todos os Status</SelectItem>
-              {statusOptions.map((opt) => (
-                <SelectItem key={opt.value} value={opt.value}>
-                  {opt.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {session?.user.role !== 'psicologo' && (
-            <>
-              <Select value={filtroPsicologo} onValueChange={setFiltroPsicologo}>
-                <SelectTrigger className="w-[150px]">
-                  <SelectValue placeholder="Psicólogo" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos os Psicólogos</SelectItem>
-                  {psicologos.map((psicologo) => (
-                    <SelectItem key={psicologo.id} value={psicologo.id}>
-                      {psicologo.nome_completo}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Select value={filtroPaciente} onValueChange={setFiltroPaciente}>
-                <SelectTrigger className="w-[150px]">
-                  <SelectValue placeholder="Paciente" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos os Pacientes</SelectItem>
-                  {pacientes.map((paciente) => (
-                    <SelectItem key={paciente.id} value={paciente.id}>
-                      {paciente.profiles?.nome_completo || "N/A"}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </>
-          )}
-          {(filtroStatus !== "all" || filtroPaciente !== "all" || filtroPsicologo !== "all") && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                setFiltroStatus("all");
-                setFiltroPaciente("all");
-                setFiltroPsicologo("all");
-              }}
-            >
-              Limpar Filtros
-            </Button>
-          )}
-        </div>
+      {/* Filtros */}
+      <div className="flex items-center gap-4 flex-wrap">
+        <span className="text-sm text-muted-foreground">Filtrar por</span>
 
-        {/* Tabela de Agendamentos */}
-        <div className="rounded-lg border bg-white">
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-gray-50">
-                <TableHead>Horário</TableHead>
-                <TableHead>Atendimento</TableHead>
-                <TableHead>Chegada</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Profissional</TableHead>
-                <TableHead>Paciente</TableHead>
-                <TableHead className="w-[100px]"></TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {loading ? (
-                <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8">
-                    Carregando...
-                  </TableCell>
-                </TableRow>
-              ) : agendamentosFiltrados.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
-                    Nenhum agendamento encontrado para esta data
-                  </TableCell>
-                </TableRow>
-              ) : (
-                agendamentosFiltrados.map((agendamento) => (
-                  <TableRow key={agendamento.id} className="hover:bg-gray-50">
-                    <TableCell className="font-medium">
-                      {formatarHora(agendamento.data_hora)}
-                    </TableCell>
-                    <TableCell>CONSULTA</TableCell>
-                    <TableCell className="text-muted-foreground">N/A</TableCell>
-                    <TableCell>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className={`${statusColors[agendamento.status] || "bg-gray-100 text-gray-700"} border h-7 px-3 text-sm`}
-                          >
-                            {statusLabels[agendamento.status] || agendamento.status}
-                            <ChevronDown className="ml-2 h-3 w-3" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="start">
-                          {statusOptions.map((opt) => (
-                            <DropdownMenuItem
-                              key={opt.value}
-                              onClick={() => handleStatusChange(agendamento.id, opt.value)}
-                            >
-                              {opt.label}
-                            </DropdownMenuItem>
-                          ))}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
+        <Select value={filtroStatus} onValueChange={setFiltroStatus}>
+          <SelectTrigger className="w-[150px]">
+            <SelectValue placeholder="Status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todos os Status</SelectItem>
+            {statusOptions.map((opt) => (
+              <SelectItem key={opt.value} value={opt.value}>
+                {opt.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        {session?.user.role !== "psicologo" && (
+          <>
+            {/* Psicólogo */}
+            <Select value={filtroPsicologo} onValueChange={setFiltroPsicologo}>
+              <SelectTrigger className="w-[150px]">
+                <SelectValue placeholder="Psicólogo" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos os Psicólogos</SelectItem>
+                {psicologos.map((ps) => (
+                  <SelectItem key={ps.id} value={ps.id}>
+                    {ps.nome_completo}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select value={filtroPaciente} onValueChange={setFiltroPaciente}>
+              <SelectTrigger className="w-[150px]">
+                <SelectValue placeholder="Paciente" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos os Pacientes</SelectItem>
+                {pacientes.map((pac) => (
+                  <SelectItem key={pac.id} value={pac.id}>
+                    {pac.profiles?.nome_completo || "N/A"}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </>
+        )}
+
+        {(filtroStatus !== "all" ||
+          filtroPsicologo !== "all" ||
+          filtroPaciente !== "all") && (
+          <Button variant="outline" size="sm" onClick={() => {
+            setFiltroStatus("all");
+            setFiltroPaciente("all");
+            setFiltroPsicologo("all");
+          }}>
+            Limpar Filtros
+          </Button>
+        )}
+      </div>
+
+      {/* Tabela */}
+      <div className="rounded-lg border border-primary/30 bg-card shadow-sm">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-primary/10 border-b border-primary/30">
+              <TableHead className="text-primary font-semibold">Horário</TableHead>
+              <TableHead className="text-primary font-semibold">Atendimento</TableHead>
+              <TableHead className="text-primary font-semibold">Chegada</TableHead>
+              <TableHead className="text-primary font-semibold">Status</TableHead>
+              <TableHead className="text-primary font-semibold">Profissional</TableHead>
+              <TableHead className="text-primary font-semibold">Paciente</TableHead>
+              <TableHead className="w-[100px]"></TableHead>
+            </TableRow>
+          </TableHeader>
+
+          <TableBody>
+            {agendamentosFiltrados.map((ag) => (
+              <TableRow
+                key={ag.id}
+                className="hover:bg-primary/5 transition-colors border-b border-border"
+              >
+                <TableCell className="text-foreground">{formatarHora(ag.data_hora)}</TableCell>
+
+                <TableCell className="text-foreground">
+                  {ag.status === "em_atendimento" ? "Em Atendimento" : "Consulta"}
+                </TableCell>
+
+                <TableCell className="text-foreground">—</TableCell>
+
+                {/* Status badge */}
+                <TableCell>
+                  <span className="px-2 py-1 rounded-md text-xs font-medium bg-primary/10 text-primary border border-primary/30">
+                    {statusLabels[ag.status]}
+                  </span>
+                </TableCell>
+
+                <TableCell className="text-foreground">{ag.psicologo_nome}</TableCell>
+
+                <TableCell className="text-foreground flex items-center gap-2">
+                  <Avatar className="h-7 w-7">
+                    <AvatarFallback>
+                      {getInitials(ag.paciente_nome || "")}
+                    </AvatarFallback>
+                  </Avatar>
+                  {ag.paciente_nome}
+                </TableCell>
+
+                {/* Dropdown */}
+                <TableCell className="text-right">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <ChevronDown className="w-4 h-4 text-primary" />
+                      </Button>
+                    </DropdownMenuTrigger>
+
+                    <DropdownMenuContent align="end" className="bg-card border-primary/30">
+                      {statusOptions.map((opt) => (
+                        <DropdownMenuItem
+                          key={opt.value}
+                          onClick={() => handleStatusChange(ag.id, opt.value)}
+                          className="text-foreground hover:bg-primary/10 hover:text-primary"
+                        >
+                          {opt.label}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <Avatar className="h-6 w-6">
@@ -673,11 +704,10 @@ export default function Agendamentos() {
                         </Button>
                       )}
                     </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
           
           {/* Rodapé com Total */}
           <div className="border-t bg-gray-50 px-4 py-3 flex justify-end items-center">
@@ -686,8 +716,8 @@ export default function Agendamentos() {
               <span className="text-sm font-bold text-gray-900">{agendamentosFiltrados.length}</span>
             </div>
           </div>
-        </div>
       </div>
-    </DashboardLayout>
-  );
+    </div>
+  </DashboardLayout>
+);
 }

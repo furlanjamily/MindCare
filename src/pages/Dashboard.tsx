@@ -4,7 +4,18 @@ import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Users, UserCog, Clock, Plus, FileText, UserPlus, CheckCircle, Play, X } from "lucide-react";
+import {
+  Calendar,
+  Users,
+  UserCog,
+  Clock,
+  Plus,
+  FileText,
+  UserPlus,
+  CheckCircle,
+  Play,
+  X,
+} from "lucide-react";
 import { api } from "@/lib/api";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -21,12 +32,12 @@ interface Agendamento {
 }
 
 const statusColors: Record<string, string> = {
-  agendado: "bg-[#E3F2FD] text-[#1976D2] border-[#90CAF9]",
+  agendado: "bg-[#EFE6FF] text-[#6B46C1] border-[#C4B5FD]",
   confirmado: "bg-[#E8F5E9] text-[#2E7D32] border-[#81C784]",
-  em_atendimento: "bg-[#FFF3E0] text-[#F57C00] border-[#FFB74D]",
-  concluido: "bg-[#F5F5F5] text-[#616161] border-[#BDBDBD]",
-  cancelado: "bg-[#FFEBEE] text-[#C62828] border-[#EF5350]",
-  pendente: "bg-[#FFF9C4] text-[#F57F17] border-[#FFC107]",
+  em_atendimento: "bg-[#F5EEFF] text-[#553094] border-[#D8B4FE]",
+  concluido: "bg-[#F5F5F5] text-[#6B46C1] border-[#D1C4E9]",
+  cancelado: "bg-[#FFE8E8] text-[#B83232] border-[#F5A3A3]",
+  pendente: "bg-[#FFF4C2] text-[#A86900] border-[#FFD666]",
 };
 
 const statusLabels: Record<string, string> = {
@@ -50,7 +61,9 @@ export default function Dashboard() {
     psicologosEsteMes: 0,
     pacientesEstaSemana: 0,
   });
-  const [proximosAgendamentos, setProximosAgendamentos] = useState<Agendamento[]>([]);
+  const [proximosAgendamentos, setProximosAgendamentos] = useState<
+    Agendamento[]
+  >([]);
   const [agendamentosHoje, setAgendamentosHoje] = useState<Agendamento[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -78,17 +91,27 @@ export default function Dashboard() {
     }
   }, [user, session]);
 
-  const handleAtualizarStatus = async (agendamentoId: string, novoStatus: string) => {
+  const handleAtualizarStatus = async (
+    agendamentoId: string,
+    novoStatus: string
+  ) => {
     try {
-      console.log('Atualizando status:', { agendamentoId, novoStatus, userId: session?.user.id, role: session?.user.role });
+      console.log("Atualizando status:", {
+        agendamentoId,
+        novoStatus,
+        userId: session?.user.id,
+        role: session?.user.role,
+      });
       await api.updateAgendamentoStatus(agendamentoId, novoStatus);
       toast({
         title: "Status atualizado!",
-        description: `Agendamento atualizado para: ${statusLabels[novoStatus] || novoStatus}`,
+        description: `Agendamento atualizado para: ${
+          statusLabels[novoStatus] || novoStatus
+        }`,
       });
       fetchData(); // Recarregar dados
     } catch (error: any) {
-      console.error('Erro ao atualizar status:', error);
+      console.error("Erro ao atualizar status:", error);
       toast({
         title: "Erro ao atualizar status",
         description: error.message || "Não foi possível atualizar o status.",
@@ -101,39 +124,49 @@ export default function Dashboard() {
     {
       title: "Psicólogos",
       value: stats.totalPsicologos,
-      change: stats.psicologosEsteMes > 0 ? `↑ +${stats.psicologosEsteMes} este mês` : "",
+      change:
+        stats.psicologosEsteMes > 0
+          ? `↑ +${stats.psicologosEsteMes} este mês`
+          : "",
       icon: UserCog,
-      iconBg: "bg-[#E3F2FD]",
-      iconColor: "text-[#007BFF]",
+      iconBg: "bg-[#EFE6FF]",
+      iconColor: "text-[#6B46C1]",
     },
     {
       title: "Pacientes",
       value: stats.totalPacientes,
-      change: stats.pacientesEstaSemana > 0 ? `↑ +${stats.pacientesEstaSemana} esta semana` : "",
+      change:
+        stats.pacientesEstaSemana > 0
+          ? `↑ +${stats.pacientesEstaSemana} esta semana`
+          : "",
       icon: Users,
-      iconBg: "bg-[#E8F5E9]",
-      iconColor: "text-[#28A745]",
+      iconBg: "bg-[#EFE6FF]",
+      iconColor: "text-[#6B46C1]",
     },
     {
       title: "Agendamentos Totais",
       value: stats.totalAgendamentos,
       icon: Calendar,
-      iconBg: "bg-[#E3F2FD]",
-      iconColor: "text-[#007BFF]",
+      iconBg: "bg-[#EFE6FF]",
+      iconColor: "text-[#6B46C1]",
     },
     {
       title: "Agendamentos Hoje",
       value: stats.agendamentosHoje,
       icon: Clock,
-      iconBg: "bg-[#E3F2FD]",
-      iconColor: "text-[#007BFF]",
+      iconBg: "bg-[#EFE6FF]",
+      iconColor: "text-[#6B46C1]",
     },
   ];
 
   const formatarHora = (dataHora: string, duracao: number) => {
     const inicio = new Date(dataHora);
     const fim = new Date(inicio.getTime() + duracao * 60000);
-    return `${format(inicio, "HH:mm", { locale: ptBR })} - ${format(fim, "HH:mm", { locale: ptBR })}`;
+    return `${format(inicio, "HH:mm", { locale: ptBR })} - ${format(
+      fim,
+      "HH:mm",
+      { locale: ptBR }
+    )}`;
   };
 
   const formatarData = (dataHora: string) => {
@@ -146,8 +179,10 @@ export default function Dashboard() {
     <DashboardLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-3xl font-bold tracking-tight text-[#6B46C1]">
+            Dashboard
+          </h1>
+          <p className="text-[#9F7AEA]">
             Visão geral do sistema de agendamentos de pacientes
           </p>
         </div>
@@ -177,94 +212,128 @@ export default function Dashboard() {
         </div>
 
         {/* Agendamentos de Hoje */}
-        {(session?.user.role === 'psicologo' || session?.user.role === 'admin' || session?.user.role === 'atendente') && (
+        {(session?.user.role === "psicologo" ||
+          session?.user.role === "admin" ||
+          session?.user.role === "atendente") && (
           <Card>
             <CardHeader>
               <CardTitle>
-                {session?.user.role === 'psicologo' ? 'Meus Atendimentos de Hoje' : 'Atendimentos de Hoje'}
+                {session?.user.role === "psicologo"
+                  ? "Meus Atendimentos de Hoje"
+                  : "Atendimentos de Hoje"}
               </CardTitle>
               <p className="text-sm text-muted-foreground mt-1">
-                {session?.user.role === 'psicologo' 
-                  ? 'Gerencie o status dos seus agendamentos de hoje'
-                  : 'Visualize todos os atendimentos agendados para hoje'}
+                {session?.user.role === "psicologo"
+                  ? "Gerencie o status dos seus agendamentos de hoje"
+                  : "Visualize todos os atendimentos agendados para hoje"}
               </p>
             </CardHeader>
             <CardContent>
               {loading ? (
-                <div className="text-center py-4 text-muted-foreground">Carregando...</div>
+                <div className="text-center py-4 text-muted-foreground">
+                  Carregando...
+                </div>
               ) : agendamentosHoje.length === 0 ? (
                 <div className="text-center py-4 text-muted-foreground">
                   Nenhum agendamento para hoje
                 </div>
               ) : (
                 <div className="space-y-3">
-                {agendamentosHoje.map((agendamento) => (
-                  <div
-                    key={agendamento.id}
-                    className="flex items-center justify-between gap-4 p-4 rounded-lg border bg-white hover:bg-gray-50 transition-colors"
-                  >
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Users className="h-4 w-4 text-muted-foreground" />
-                        <p className="font-semibold">{agendamento.paciente_nome || "N/A"}</p>
-                      </div>
-                      {session?.user.role !== 'psicologo' && (
-                        <p className="text-sm text-muted-foreground mb-1">
-                          {agendamento.psicologo_nome || "Psicólogo não definido"}
-                        </p>
-                      )}
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Clock className="h-3 w-3" />
-                        {formatarHora(agendamento.data_hora, agendamento.duracao_minutos)}
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Badge
-                        className={statusColors[agendamento.status] || "bg-gray-500/20 text-gray-500"}
-                      >
-                        {statusLabels[agendamento.status] || agendamento.status}
-                      </Badge>
-                      {/* Botões de ação apenas para psicólogos */}
-                      {session?.user.role === 'psicologo' && agendamento.status !== 'concluido' && agendamento.status !== 'cancelado' && (
-                        <div className="flex gap-1">
-                          {agendamento.status === 'agendado' || agendamento.status === 'confirmado' ? (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleAtualizarStatus(agendamento.id, 'em_atendimento')}
-                              className="h-8"
-                            >
-                              <Play className="h-3 w-3 mr-1" />
-                              Iniciar
-                            </Button>
-                          ) : null}
-                          {agendamento.status === 'em_atendimento' ? (
-                            <Button
-                              size="sm"
-                              variant="default"
-                              onClick={() => handleAtualizarStatus(agendamento.id, 'concluido')}
-                              className="h-8 bg-[#28A745] hover:bg-[#218838] text-white"
-                            >
-                              <CheckCircle className="h-3 w-3 mr-1" />
-                              Finalizar
-                            </Button>
-                          ) : null}
-                          {agendamento.status !== 'cancelado' && agendamento.status !== 'concluido' ? (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleAtualizarStatus(agendamento.id, 'cancelado')}
-                              className="h-8 text-red-600 hover:text-red-700"
-                            >
-                              <X className="h-3 w-3 mr-1" />
-                              Cancelar
-                            </Button>
-                          ) : null}
+                  {agendamentosHoje.map((agendamento) => (
+                    <div
+                      key={agendamento.id}
+                      className="flex items-center gap-4 p-3 rounded-lg border-l-4 border-[#6B46C1] bg-white hover:bg-[#FAF5FF] transition-colors"
+                    >
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <Users className="h-4 w-4 text-muted-foreground" />
+                          <p className="font-semibold">
+                            {agendamento.paciente_nome || "N/A"}
+                          </p>
                         </div>
-                      )}
+                        {session?.user.role !== "psicologo" && (
+                          <p className="text-sm text-muted-foreground mb-1">
+                            {agendamento.psicologo_nome ||
+                              "Psicólogo não definido"}
+                          </p>
+                        )}
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <Clock className="h-3 w-3" />
+                          {formatarHora(
+                            agendamento.data_hora,
+                            agendamento.duracao_minutos
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge
+                          className={
+                            statusColors[agendamento.status] ||
+                            "bg-gray-500/20 text-gray-500"
+                          }
+                        >
+                          {statusLabels[agendamento.status] ||
+                            agendamento.status}
+                        </Badge>
+                        {/* Botões de ação apenas para psicólogos */}
+                        {session?.user.role === "psicologo" &&
+                          agendamento.status !== "concluido" &&
+                          agendamento.status !== "cancelado" && (
+                            <div className="flex gap-1">
+                              {agendamento.status === "agendado" ||
+                              agendamento.status === "confirmado" ? (
+                                <>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() =>
+                                      handleAtualizarStatus(
+                                        agendamento.id,
+                                        "em_atendimento"
+                                      )
+                                    }
+                                    className="h-8 border-[#B794F4] text-[#6B46C1] hover:bg-[#F0E6FF]"
+                                  >
+                                    <Play className="h-3 w-3 mr-1" />
+                                    Iniciar
+                                  </Button>
+
+                                  <Button
+                                    size="sm"
+                                    variant="default"
+                                    onClick={() =>
+                                      handleAtualizarStatus(
+                                        agendamento.id,
+                                        "concluido"
+                                      )
+                                    }
+                                    className="h-8 bg-[#4CAF50] hover:bg-[#449d48] text-white"
+                                  >
+                                    <CheckCircle className="h-3 w-3 mr-1" />
+                                    Finalizar
+                                  </Button>
+
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() =>
+                                      handleAtualizarStatus(
+                                        agendamento.id,
+                                        "cancelado"
+                                      )
+                                    }
+                                    className="h-8 text-[#B83232] hover:text-[#922B2B] border-[#F5A3A3]"
+                                  >
+                                    <X className="h-3 w-3 mr-1" />
+                                    Cancelar
+                                  </Button>
+                                </>
+                              ) : null}
+                            </div>
+                          )}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
                 </div>
               )}
             </CardContent>
@@ -277,11 +346,15 @@ export default function Dashboard() {
           <Card className="lg:col-span-2">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Próximos Agendamentos</CardTitle>
-              <span className="text-sm text-muted-foreground">Hoje, {hoje}</span>
+              <span className="text-sm text-muted-foreground">
+                Hoje, {hoje}
+              </span>
             </CardHeader>
             <CardContent>
               {loading ? (
-                <div className="text-center py-4 text-muted-foreground">Carregando...</div>
+                <div className="text-center py-4 text-muted-foreground">
+                  Carregando...
+                </div>
               ) : proximosAgendamentos.length === 0 ? (
                 <div className="text-center py-4 text-muted-foreground">
                   Nenhum agendamento futuro
@@ -296,18 +369,27 @@ export default function Dashboard() {
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
                           <Users className="h-4 w-4 text-muted-foreground" />
-                          <p className="font-semibold">{agendamento.paciente_nome || "N/A"}</p>
+                          <p className="font-semibold">
+                            {agendamento.paciente_nome || "N/A"}
+                          </p>
                         </div>
                         <p className="text-sm text-muted-foreground mb-1">
-                          {agendamento.psicologo_nome || "Psicólogo não definido"}
+                          {agendamento.psicologo_nome ||
+                            "Psicólogo não definido"}
                         </p>
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                           <Clock className="h-3 w-3" />
-                          {formatarHora(agendamento.data_hora, agendamento.duracao_minutos)}
+                          {formatarHora(
+                            agendamento.data_hora,
+                            agendamento.duracao_minutos
+                          )}
                         </div>
                       </div>
                       <Badge
-                        className={statusColors[agendamento.status] || "bg-gray-500/20 text-gray-500"}
+                        className={
+                          statusColors[agendamento.status] ||
+                          "bg-gray-500/20 text-gray-500"
+                        }
                       >
                         {statusLabels[agendamento.status] || agendamento.status}
                       </Badge>
@@ -325,36 +407,37 @@ export default function Dashboard() {
             </CardHeader>
             <CardContent className="space-y-2">
               <Button
-                className="w-full justify-start bg-[#007BFF] hover:bg-[#0056B3] text-white"
+                className="w-full justify-start bg-[#6B46C1] hover:bg-[#553094] text-white"
                 onClick={() => navigate("/agendamentos")}
               >
                 <Plus className="mr-2 h-4 w-4" />
                 Novo Agendamento
               </Button>
-              {session?.user.role !== 'psicologo' && (
+              {session?.user.role !== "psicologo" && (
                 <>
                   <Button
-                    className="w-full justify-start bg-[#28A745] hover:bg-[#218838] text-white"
+                    className="w-full justify-start bg-[#9F7AEA] hover:bg-[#805AD5] text-white"
                     onClick={() => navigate("/pacientes")}
                   >
                     <UserPlus className="mr-2 h-4 w-4" />
                     Adicionar Paciente
                   </Button>
+
                   <Button
                     variant="outline"
-                    className="w-full justify-start"
+                    className="w-full justify-start border-[#B794F4] text-[#6B46C1] hover:bg-[#F2E8FF]"
                     onClick={() => navigate("/agendamentos")}
                   >
                     <Calendar className="mr-2 h-4 w-4" />
                     Ver Calendário
                   </Button>
+
                   <Button
                     variant="outline"
-                    className="w-full justify-start"
-                    onClick={() => {
-                      // Implementar relatórios no futuro
-                      alert("Funcionalidade de relatórios em desenvolvimento");
-                    }}
+                    className="w-full justify-start border-[#B794F4] text-[#6B46C1] hover:bg-[#F2E8FF]"
+                    onClick={() =>
+                      alert("Funcionalidade de relatórios em desenvolvimento")
+                    }
                   >
                     <FileText className="mr-2 h-4 w-4" />
                     Relatórios
@@ -366,7 +449,7 @@ export default function Dashboard() {
         </div>
 
         {/* Lista de pacientes do psicólogo (se for psicólogo) */}
-        {session?.user.role === 'psicologo' && (
+        {session?.user.role === "psicologo" && (
           <Card>
             <CardHeader>
               <CardTitle>Meus Pacientes</CardTitle>

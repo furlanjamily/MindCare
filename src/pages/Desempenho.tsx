@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"; 
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -95,8 +95,11 @@ export default function Desempenho() {
   return (
     <DashboardLayout>
       <div className="space-y-6">
+        
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-[#007BFF]">Desempenho dos Profissionais</h1>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-[#6B46C1] to-[#9F7AEA] text-transparent bg-clip-text">
+            Desempenho dos Profissionais
+          </h1>
         </div>
 
         {loading ? (
@@ -109,23 +112,23 @@ export default function Desempenho() {
           </Card>
         ) : (
           <div className="space-y-6">
-            {/* Cards de Resumo Geral */}
+
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                   <CardTitle className="text-sm font-medium">Total Profissionais</CardTitle>
-                  <Users className="h-4 w-4 text-[#007BFF]" />
+                  <Users className="h-4 w-4 text-[#9F7AEA]" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">{desempenho.length}</div>
                   <p className="text-xs text-muted-foreground mt-1">Psicólogos ativos</p>
                 </CardContent>
               </Card>
-
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                   <CardTitle className="text-sm font-medium">Total Pacientes</CardTitle>
-                  <Users className="h-4 w-4 text-[#28A745]" />
+                  <Users className="h-4 w-4 text-[#A78BFA]" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">
@@ -138,7 +141,7 @@ export default function Desempenho() {
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                   <CardTitle className="text-sm font-medium">Total Agendamentos</CardTitle>
-                  <Calendar className="h-4 w-4 text-[#007BFF]" />
+                  <Calendar className="h-4 w-4 text-[#9F7AEA]" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">
@@ -151,18 +154,19 @@ export default function Desempenho() {
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                   <CardTitle className="text-sm font-medium">Receita Total</CardTitle>
-                  <DollarSign className="h-4 w-4 text-[#28A745]" />
+                  <DollarSign className="h-4 w-4 text-[#A78BFA]" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold text-[#28A745]">
+                  <div className="text-2xl font-bold text-[#A78BFA]">
                     {formatarMoeda(desempenho.reduce((acc, d) => acc + d.receita_total, 0))}
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">Receita acumulada</p>
                 </CardContent>
               </Card>
+
             </div>
 
-            {/* Tabela de Desempenho */}
+            {/* Tabela */}
             <Card>
               <CardHeader>
                 <CardTitle>Desempenho Individual</CardTitle>
@@ -184,9 +188,11 @@ export default function Desempenho() {
                         <TableHead className="text-center">Duração Média</TableHead>
                       </TableRow>
                     </TableHeader>
+
                     <TableBody>
                       {desempenho.map((prof) => (
                         <TableRow key={prof.id}>
+                          
                           <TableCell>
                             <div>
                               <div className="font-medium">{prof.psicologo_nome}</div>
@@ -195,62 +201,72 @@ export default function Desempenho() {
                               </div>
                             </div>
                           </TableCell>
+
                           <TableCell className="text-center">
                             <span className="flex items-center justify-center">
-                              <Users className="h-4 w-4 mr-1 text-[#007BFF]" />
+                              <Users className="h-4 w-4 mr-1 text-[#9F7AEA]" />
                               {prof.total_pacientes}
                             </span>
                           </TableCell>
+
                           <TableCell className="text-center">
                             <span className="flex items-center justify-center">
-                              <Calendar className="h-4 w-4 mr-1 text-[#007BFF]" />
+                              <Calendar className="h-4 w-4 mr-1 text-[#9F7AEA]" />
                               {prof.total_agendamentos}
                             </span>
                           </TableCell>
+
                           <TableCell className="text-center">
-                            <span className="px-2 py-1 rounded text-xs bg-[#E8F5E9] text-[#28A745]">
+                            <span className="px-2 py-1 rounded text-xs bg-[#E9D8FD] text-[#6B46C1]">
                               {prof.agendamentos_concluidos}
                             </span>
                           </TableCell>
+
                           <TableCell className="text-center">
-                            <span className="px-2 py-1 rounded text-xs bg-[#FFEBEE] text-[#DC3545]">
+                            <span className="px-2 py-1 rounded text-xs bg-[#FAE8FF] text-[#B83280]">
                               {prof.agendamentos_cancelados}
                             </span>
                           </TableCell>
+
                           <TableCell className="text-center">
                             <span className="flex items-center justify-center">
-                              <TrendingUp className="h-4 w-4 mr-1 text-[#28A745]" />
+                              <TrendingUp className="h-4 w-4 mr-1 text-[#A78BFA]" />
                               {prof.taxa_conclusao}%
                             </span>
                           </TableCell>
                           <TableCell className="text-center">
-                            <span className="px-2 py-1 rounded text-xs bg-[#FFF3E0] text-[#F57C00]">
+                            <span className="px-2 py-1 rounded text-xs bg-[#FAE8FF] text-[#B83280]">
                               {prof.taxa_cancelamento}%
                             </span>
                           </TableCell>
+
                           <TableCell className="text-center">
                             <span className="flex items-center justify-center">
-                              <FileText className="h-4 w-4 mr-1 text-[#007BFF]" />
+                              <FileText className="h-4 w-4 mr-1 text-[#9F7AEA]" />
                               {prof.total_prontuarios}
                             </span>
                           </TableCell>
-                          <TableCell className="text-right font-medium text-[#28A745]">
+
+                          <TableCell className="text-right font-medium text-[#A78BFA]">
                             {formatarMoeda(prof.receita_total)}
                           </TableCell>
+
                           <TableCell className="text-center text-sm">
                             {formatarDuracao(prof.duracao_media)}
                           </TableCell>
+
                         </TableRow>
                       ))}
                     </TableBody>
+
                   </Table>
                 </div>
               </CardContent>
             </Card>
+
           </div>
         )}
       </div>
     </DashboardLayout>
   );
 }
-

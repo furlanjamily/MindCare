@@ -2,108 +2,67 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
 @layer base {
-  :root {
-    --background: 210 20% 96%; /* #F8F9FA */
-    --foreground: 210 25% 25%; /* Texto escuro */
+:root {
+  --background: 265 30% 10%;
+  --foreground: 265 25% 95%;
 
-    --card: 0 0% 100%; /* Branco */
-    --card-foreground: 210 25% 25%;
+  --card: 265 25% 13%;
+  --card-foreground: 265 25% 95%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 210 25% 25%;
+  --popover: 265 25% 13%;
+  --popover-foreground: 265 25% 95%;
 
-    --primary: 214 100% 50%; /* #007BFF Azul */
-    --primary-foreground: 0 0% 100%;
+  --primary: 265 70% 55%;
+  --primary-foreground: 0 0% 100%;
 
-    --secondary: 134 61% 41%; /* #28A745 Verde */
-    --secondary-foreground: 0 0% 100%;
+  --secondary: 265 20% 20%;
+  --secondary-foreground: 265 25% 95%;
 
-    --muted: 210 20% 96%; /* #F8F9FA */
-    --muted-foreground: 210 10% 45%;
+  --accent: 265 55% 50%;
+  --accent-foreground: 0 0% 100%;
 
-    --accent: 214 100% 50%; /* Azul para destaque */
-    --accent-foreground: 0 0% 100%;
+  --muted: 265 20% 18%;
+  --muted-foreground: 265 40% 85%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
+  --destructive: 0 70% 50%;
+  --destructive-foreground: 0 0% 100%;
 
-    --border: 210 15% 85%;
-    --input: 210 15% 92%;
-    --ring: 214 100% 50%;
+  --border: 265 20% 20%;
+  --input: 265 20% 20%;
+  --ring: 265 70% 55%;
 
-    --radius: 0.5rem;
-    
-    /* Custom clinic theme tokens */
-    --gradient-primary: linear-gradient(135deg, hsl(214 100% 50%), hsl(134 61% 41%));
-    --gradient-subtle: linear-gradient(180deg, hsl(210 20% 98%), hsl(210 20% 96%));
-    --shadow-soft: 0 4px 20px -2px hsl(214 100% 50% / 0.1);
-    --shadow-medium: 0 8px 30px -4px hsl(214 100% 50% / 0.15);
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --radius: 0.5rem;
+}
 
-    /* Sidebar dark blue */
-    --sidebar-background: 210 25% 25%; /* #2C3E50 */
-    --sidebar-foreground: 0 0% 100%;
 
-    --sidebar-primary: 214 100% 50%; /* #007BFF Azul para item ativo */
+/* Tema dark opcional (ficará ainda mais elegante) */
+.dark {
+  --background: 265 30% 6%;
+  --foreground: 265 25% 96%;
 
-    --sidebar-primary-foreground: 0 0% 100%;
+  --card: 265 25% 8%;
+  --card-foreground: 265 25% 96%;
 
-    --sidebar-accent: 214 100% 50%;
+  --popover: 265 25% 8%;
+  --popover-foreground: 265 25% 96%;
 
-    --sidebar-accent-foreground: 0 0% 100%;
+  --primary: 265 70% 58%;
+  --primary-foreground: 0 0% 100%;
 
-    --sidebar-border: 210 25% 30%;
+  --secondary: 265 20% 16%;
+  --secondary-foreground: 265 25% 96%;
 
-    --sidebar-ring: 214 100% 50%;
-  }
+  --accent: 265 55% 55%;
+  --accent-foreground: 0 0% 100%;
 
-  .dark {
-    --background: 215 28% 17%;
-    --foreground: 210 40% 98%;
+  --muted: 265 20% 16%;
+  --muted-foreground: 265 40% 85%;
 
-    --card: 215 25% 20%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 215 25% 20%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 192 76% 55%;
-    --primary-foreground: 215 25% 17%;
-
-    --secondary: 156 48% 52%;
-    --secondary-foreground: 215 25% 17%;
-
-    --muted: 215 25% 25%;
-    --muted-foreground: 215 20% 65%;
-
-    --accent: 192 76% 25%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 215 25% 30%;
-    --input: 215 25% 25%;
-    --ring: 192 76% 65%;
-    
-    --gradient-primary: linear-gradient(135deg, hsl(192 76% 55%), hsl(156 48% 52%));
-    --gradient-subtle: linear-gradient(180deg, hsl(215 28% 19%), hsl(215 28% 17%));
-    --shadow-soft: 0 4px 20px -2px hsl(192 76% 55% / 0.2);
-    --shadow-medium: 0 8px 30px -4px hsl(192 76% 55% / 0.25);
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
+  --border: 265 20% 16%;
+  --input: 265 20% 16%;
+  --ring: 265 70% 58%;
+}
 }
 
 @layer base {
