@@ -201,8 +201,8 @@ export default function Psicologos() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Psicólogos</h1>
-            <p className="text-muted-foreground">
+            <h1 className="text-3xl font-bold tracking-tight text-primary/90">Psicólogos</h1>
+            <p className="text-muted-foreground text-black/60">
               Gerencie os psicólogos cadastrados na clínica
             </p>
           </div>
@@ -216,7 +216,7 @@ export default function Psicologos() {
               }
             }}>
               <DialogTrigger asChild>
-                <Button onClick={handleNovoPsicologo} className="bg-[#007BFF] hover:bg-[#0056B3] text-white">
+                <Button onClick={handleNovoPsicologo} className="bg-primary/90 text-white">
                   <PlusCircle className="mr-2 h-4 w-4" />
                   Novo Psicólogo
                 </Button>

@@ -158,7 +158,6 @@ export default function Financeiro() {
           <h1 className="text-3xl font-bold text-primary">Relatórios Financeiros</h1>
         </div>
 
-        {/* Filtros */}
         <Card>
           <CardHeader>
             <CardTitle>Filtros</CardTitle>
@@ -171,6 +170,9 @@ export default function Financeiro() {
                   type="date"
                   value={dataInicio}
                   onChange={(e) => setDataInicio(e.target.value)}
+                    className="input-date-white"
+
+              
                 />
               </div>
               <div>
@@ -179,6 +181,8 @@ export default function Financeiro() {
                   type="date"
                   value={dataFim}
                   onChange={(e) => setDataFim(e.target.value)}
+                    className="input-date-white"
+
                 />
               </div>
               <div>
@@ -275,7 +279,6 @@ export default function Financeiro() {
           </div>
         )}
 
-        {/* Detalhamento por Psicólogo */}
         {relatorio?.porPsicologo?.length > 0 && (
           <Card>
             <CardHeader>

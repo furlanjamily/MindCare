@@ -47,7 +47,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
-import { PlusCircle, ChevronLeft, ChevronRight, ArrowRight, ChevronDown, User } from "lucide-react";
+import {
+  PlusCircle,
+  ChevronLeft,
+  ChevronRight,
+  ArrowRight,
+  ChevronDown,
+  User,
+} from "lucide-react";
 import { format, addDays, subDays, startOfDay } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useAuth } from "@/hooks/useAuth";
@@ -183,7 +190,7 @@ export default function Agendamentos() {
 
   useEffect(() => {
     const loadData = async () => {
-      if (session?.user.role !== 'psicologo') {
+      if (session?.user.role !== "psicologo") {
         try {
           const [pacientesData, psicologosData] = await Promise.all([
             api.getPacientes(),
@@ -205,17 +212,30 @@ export default function Agendamentos() {
 
   // Aplicar filtros quando mudarem
   useEffect(() => {
-    if (agendamentosTodos.length > 0 || selectedDate || filtroStatus || filtroPaciente || filtroPsicologo) {
+    if (
+      agendamentosTodos.length > 0 ||
+      selectedDate ||
+      filtroStatus ||
+      filtroPaciente ||
+      filtroPsicologo
+    ) {
       aplicarFiltros(agendamentosTodos);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedDate, filtroStatus, filtroPaciente, filtroPsicologo, agendamentosTodos]);
+  }, [
+    selectedDate,
+    filtroStatus,
+    filtroPaciente,
+    filtroPsicologo,
+    agendamentosTodos,
+  ]);
 
   async function onSubmit(data: AgendamentoFormData) {
-    if (!session || session.user.role === 'psicologo') {
+    if (!session || session.user.role === "psicologo") {
       toast({
         title: "Erro",
-        description: "Apenas administradores e atendentes podem criar agendamentos.",
+        description:
+          "Apenas administradores e atendentes podem criar agendamentos.",
         variant: "destructive",
       });
       return;
@@ -226,7 +246,9 @@ export default function Agendamentos() {
         paciente_id: data.paciente_id,
         psicologo_id: data.psicologo_id,
         data_hora: data.data_hora,
-        duracao_minutos: data.duracao_minutos ? parseInt(data.duracao_minutos) : 50,
+        duracao_minutos: data.duracao_minutos
+          ? parseInt(data.duracao_minutos)
+          : 50,
         status: data.status || "agendado",
         observacoes: data.observacoes || null,
         valor: data.valor ? parseFloat(data.valor) : null,
@@ -234,7 +256,8 @@ export default function Agendamentos() {
 
       toast({
         title: "Agendamento Criado!",
-        description: "O agendamento foi criado e o paciente foi vinculado ao psicólogo.",
+        description:
+          "O agendamento foi criado e o paciente foi vinculado ao psicólogo.",
       });
 
       form.reset();
@@ -250,7 +273,10 @@ export default function Agendamentos() {
     }
   }
 
-  const handleStatusChange = async (agendamentoId: string, newStatus: string) => {
+  const handleStatusChange = async (
+    agendamentoId: string,
+    newStatus: string
+  ) => {
     try {
       await api.updateAgendamentoStatus(agendamentoId, newStatus);
       toast({
@@ -272,7 +298,9 @@ export default function Agendamentos() {
   };
 
   const navigateDate = (direction: "prev" | "next") => {
-    setSelectedDate(prev => direction === "next" ? addDays(prev, 1) : subDays(prev, 1));
+    setSelectedDate((prev) =>
+      direction === "next" ? addDays(prev, 1) : subDays(prev, 1)
+    );
   };
 
   const formatarDataCompleta = (date: Date) => {
@@ -286,7 +314,7 @@ export default function Agendamentos() {
   const getInitials = (name: string) => {
     return name
       .split(" ")
-      .map(n => n[0])
+      .map((n) => n[0])
       .join("")
       .toUpperCase()
       .slice(0, 2);
@@ -295,429 +323,503 @@ export default function Agendamentos() {
   // agendamentos já vem filtrado da função aplicarFiltros
   const agendamentosFiltrados = agendamentos;
 
-return (
-  <DashboardLayout>
-    <div className="space-y-6">
+  return (
+    <DashboardLayout>
+      <div className="space-y-6">
+        {/* Título e Botão Novo */}
+        <div className="flex items-center justify-between">
+          <h1 className="text-4xl font-bold text-primary">Agenda</h1>
 
-      {/* Título e Botão Novo */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-4xl font-bold text-primary">Agenda</h1>
+          {session?.user.role !== "psicologo" && (
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="bg-primary hover:bg-primary/80 text-primary-foreground">
+                  <PlusCircle className="mr-2 h-4 w-4" />
+                  Novo Agendamento
+                </Button>
+              </DialogTrigger>
 
-        {session?.user.role !== "psicologo" && (
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button className="bg-primary hover:bg-primary/80 text-primary-foreground">
-                <PlusCircle className="mr-2 h-4 w-4" />
-                Novo Agendamento
-              </Button>
-            </DialogTrigger>
+              <DialogContent className="sm:max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle>Novo Agendamento</DialogTitle>
+                  <DialogDescription>
+                    Crie um novo agendamento. O paciente será automaticamente
+                    vinculado ao psicólogo.
+                  </DialogDescription>
+                </DialogHeader>
 
-            <DialogContent className="sm:max-w-2xl">
-              <DialogHeader>
-                <DialogTitle>Novo Agendamento</DialogTitle>
-                <DialogDescription>
-                  Crie um novo agendamento. O paciente será automaticamente
-                  vinculado ao psicólogo.
-                </DialogDescription>
-              </DialogHeader>
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-4"
+                  >
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="paciente_id"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Paciente</FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              value={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Selecione o paciente" />
+                                </SelectTrigger>
+                              </FormControl>
 
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                              <SelectContent>
+                                {pacientes.map((paciente) => (
+                                  <SelectItem
+                                    key={paciente.id}
+                                    value={paciente.id}
+                                  >
+                                    {paciente.profiles?.nome_completo || "N/A"}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      control={form.control}
-                      name="paciente_id"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Paciente</FormLabel>
-                          <Select onValueChange={field.onChange} value={field.value}>
+                      {/* Psicólogo */}
+                      <FormField
+                        control={form.control}
+                        name="psicologo_id"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Psicólogo</FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              value={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Selecione o psicólogo" />
+                                </SelectTrigger>
+                              </FormControl>
+
+                              <SelectContent>
+                                {psicologos.map((p) => (
+                                  <SelectItem key={p.id} value={p.id}>
+                                    {p.nome_completo} - CRP {p.crp}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      {/* Data e Hora */}
+                      <FormField
+                        control={form.control}
+                        name="data_hora"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Data e Hora</FormLabel>
                             <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Selecione o paciente" />
-                              </SelectTrigger>
+                              <Input type="datetime-local" {...field} />
                             </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                            <SelectContent>
-                              {pacientes.map((paciente) => (
-                                <SelectItem key={paciente.id} value={paciente.id}>
-                                  {paciente.profiles?.nome_completo || "N/A"}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    {/* Psicólogo */}
-                    <FormField
-                      control={form.control}
-                      name="psicologo_id"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Psicólogo</FormLabel>
-                          <Select onValueChange={field.onChange} value={field.value}>
+                      {/* Duração */}
+                      <FormField
+                        control={form.control}
+                        name="duracao_minutos"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Duração (minutos)</FormLabel>
                             <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Selecione o psicólogo" />
-                              </SelectTrigger>
+                              <Input
+                                type="number"
+                                placeholder="50"
+                                {...field}
+                              />
                             </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                            <SelectContent>
-                              {psicologos.map((p) => (
-                                <SelectItem key={p.id} value={p.id}>
-                                  {p.nome_completo} - CRP {p.crp}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                      {/* Status */}
+                      <FormField
+                        control={form.control}
+                        name="status"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Status</FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              value={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Status" />
+                                </SelectTrigger>
+                              </FormControl>
 
-                    {/* Data e Hora */}
-                    <FormField
-                      control={form.control}
-                      name="data_hora"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Data e Hora</FormLabel>
-                          <FormControl>
-                            <Input type="datetime-local" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                              <SelectContent>
+                                {statusOptions.map((opt) => (
+                                  <SelectItem key={opt.value} value={opt.value}>
+                                    {opt.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                    {/* Duração */}
-                    <FormField
-                      control={form.control}
-                      name="duracao_minutos"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Duração (minutos)</FormLabel>
-                          <FormControl>
-                            <Input type="number" placeholder="50" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    {/* Status */}
-                    <FormField
-                      control={form.control}
-                      name="status"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Status</FormLabel>
-                          <Select onValueChange={field.onChange} value={field.value}>
+                      {/* Valor */}
+                      <FormField
+                        control={form.control}
+                        name="valor"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Valor (R$)</FormLabel>
                             <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Status" />
-                              </SelectTrigger>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                placeholder="150.00"
+                                {...field}
+                              />
                             </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                            <SelectContent>
-                              {statusOptions.map((opt) => (
-                                <SelectItem key={opt.value} value={opt.value}>
-                                  {opt.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                      {/* Observações */}
+                      <FormField
+                        control={form.control}
+                        name="observacoes"
+                        render={({ field }) => (
+                          <FormItem className="md:col-span-2">
+                            <FormLabel>Observações</FormLabel>
+                            <FormControl>
+                              <Textarea
+                                placeholder="Observações sobre o agendamento..."
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
 
-                    {/* Valor */}
-                    <FormField
-                      control={form.control}
-                      name="valor"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Valor (R$)</FormLabel>
-                          <FormControl>
-                            <Input type="number" step="0.01" placeholder="150.00" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    {/* Observações */}
-                    <FormField
-                      control={form.control}
-                      name="observacoes"
-                      render={({ field }) => (
-                        <FormItem className="md:col-span-2">
-                          <FormLabel>Observações</FormLabel>
-                          <FormControl>
-                            <Textarea
-                              placeholder="Observações sobre o agendamento..."
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  <DialogFooter className="pt-4">
-                    <DialogClose asChild>
-                      <Button type="button" variant="outline">
-                        Cancelar
-                      </Button>
-                    </DialogClose>
-
-                    <Button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="bg-primary hover:bg-primary/80 text-primary-foreground"
-                    >
-                      {isSubmitting ? "Salvando..." : "Criar Agendamento"}
-                    </Button>
-                  </DialogFooter>
-                </form>
-              </Form>
-            </DialogContent>
-          </Dialog>
-        )}
-      </div>
-
-      {/* Navegação de Data */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigateDate("prev")} className="h-8 w-8">
-            <ChevronLeft className="h-4 w-4 text-primary" />
-          </Button>
-
-          <h2 className="text-lg font-semibold text-primary">
-            {formatarDataCompleta(selectedDate).toUpperCase()}
-          </h2>
-
-          <Button variant="ghost" size="icon" onClick={() => navigateDate("next")} className="h-8 w-8">
-            <ChevronRight className="h-4 w-4 text-primary" />
-          </Button>
-        </div>
-
-        {/* Troca de visualização */}
-        <div className="flex items-center gap-2">
-          <Button
-            size="sm"
-            variant={viewMode === "lista" ? "default" : "ghost"}
-            className={viewMode === "lista" ? "bg-primary text-primary-foreground hover:bg-primary/80" : ""}
-            onClick={() => setViewMode("lista")}
-          >
-            Lista
-          </Button>
-
-          <Button
-            size="sm"
-            variant={viewMode === "dia" ? "default" : "ghost"}
-            className={viewMode === "dia" ? "bg-primary text-primary-foreground hover:bg-primary/80" : ""}
-            onClick={() => setViewMode("dia")}
-          >
-            Dia
-          </Button>
-
-          <Button
-            size="sm"
-            variant={viewMode === "semana" ? "default" : "ghost"}
-            className={viewMode === "semana" ? "bg-primary text-primary-foreground hover:bg-primary/80" : ""}
-            onClick={() => setViewMode("semana")}
-          >
-            Semana
-          </Button>
-        </div>
-      </div>
-
-      {/* Filtros */}
-      <div className="flex items-center gap-4 flex-wrap">
-        <span className="text-sm text-muted-foreground">Filtrar por</span>
-
-        <Select value={filtroStatus} onValueChange={setFiltroStatus}>
-          <SelectTrigger className="w-[150px]">
-            <SelectValue placeholder="Status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todos os Status</SelectItem>
-            {statusOptions.map((opt) => (
-              <SelectItem key={opt.value} value={opt.value}>
-                {opt.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-
-        {session?.user.role !== "psicologo" && (
-          <>
-            {/* Psicólogo */}
-            <Select value={filtroPsicologo} onValueChange={setFiltroPsicologo}>
-              <SelectTrigger className="w-[150px]">
-                <SelectValue placeholder="Psicólogo" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos os Psicólogos</SelectItem>
-                {psicologos.map((ps) => (
-                  <SelectItem key={ps.id} value={ps.id}>
-                    {ps.nome_completo}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <Select value={filtroPaciente} onValueChange={setFiltroPaciente}>
-              <SelectTrigger className="w-[150px]">
-                <SelectValue placeholder="Paciente" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos os Pacientes</SelectItem>
-                {pacientes.map((pac) => (
-                  <SelectItem key={pac.id} value={pac.id}>
-                    {pac.profiles?.nome_completo || "N/A"}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </>
-        )}
-
-        {(filtroStatus !== "all" ||
-          filtroPsicologo !== "all" ||
-          filtroPaciente !== "all") && (
-          <Button variant="outline" size="sm" onClick={() => {
-            setFiltroStatus("all");
-            setFiltroPaciente("all");
-            setFiltroPsicologo("all");
-          }}>
-            Limpar Filtros
-          </Button>
-        )}
-      </div>
-
-      {/* Tabela */}
-      <div className="rounded-lg border border-primary/30 bg-card shadow-sm">
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-primary/10 border-b border-primary/30">
-              <TableHead className="text-primary font-semibold">Horário</TableHead>
-              <TableHead className="text-primary font-semibold">Atendimento</TableHead>
-              <TableHead className="text-primary font-semibold">Chegada</TableHead>
-              <TableHead className="text-primary font-semibold">Status</TableHead>
-              <TableHead className="text-primary font-semibold">Profissional</TableHead>
-              <TableHead className="text-primary font-semibold">Paciente</TableHead>
-              <TableHead className="w-[100px]"></TableHead>
-            </TableRow>
-          </TableHeader>
-
-          <TableBody>
-            {agendamentosFiltrados.map((ag) => (
-              <TableRow
-                key={ag.id}
-                className="hover:bg-primary/5 transition-colors border-b border-border"
-              >
-                <TableCell className="text-foreground">{formatarHora(ag.data_hora)}</TableCell>
-
-                <TableCell className="text-foreground">
-                  {ag.status === "em_atendimento" ? "Em Atendimento" : "Consulta"}
-                </TableCell>
-
-                <TableCell className="text-foreground">—</TableCell>
-
-                {/* Status badge */}
-                <TableCell>
-                  <span className="px-2 py-1 rounded-md text-xs font-medium bg-primary/10 text-primary border border-primary/30">
-                    {statusLabels[ag.status]}
-                  </span>
-                </TableCell>
-
-                <TableCell className="text-foreground">{ag.psicologo_nome}</TableCell>
-
-                <TableCell className="text-foreground flex items-center gap-2">
-                  <Avatar className="h-7 w-7">
-                    <AvatarFallback>
-                      {getInitials(ag.paciente_nome || "")}
-                    </AvatarFallback>
-                  </Avatar>
-                  {ag.paciente_nome}
-                </TableCell>
-
-                {/* Dropdown */}
-                <TableCell className="text-right">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon">
-                        <ChevronDown className="w-4 h-4 text-primary" />
-                      </Button>
-                    </DropdownMenuTrigger>
-
-                    <DropdownMenuContent align="end" className="bg-card border-primary/30">
-                      {statusOptions.map((opt) => (
-                        <DropdownMenuItem
-                          key={opt.value}
-                          onClick={() => handleStatusChange(ag.id, opt.value)}
-                          className="text-foreground hover:bg-primary/10 hover:text-primary"
-                        >
-                          {opt.label}
-                        </DropdownMenuItem>
-                      ))}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Avatar className="h-6 w-6">
-                          <AvatarFallback className="text-xs bg-[#E3F2FD] text-[#007BFF]">
-                            {getInitials(agendamento.psicologo_nome || "N/A")}
-                          </AvatarFallback>
-                        </Avatar>
-                        <span className="text-sm">{agendamento.psicologo_nome || "N/A"}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Avatar className="h-6 w-6">
-                          <AvatarFallback className="text-xs bg-[#E3F2FD] text-[#007BFF]">
-                            {getInitials(agendamento.paciente_nome || "N/A")}
-                          </AvatarFallback>
-                        </Avatar>
-                        <span className="text-sm">{agendamento.paciente_nome || "N/A"}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      {agendamento.status !== 'concluido' && agendamento.status !== 'cancelado' && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleAtender(agendamento.id)}
-                          className="border-[#007BFF] text-[#007BFF] hover:bg-[#E3F2FD] h-7"
-                        >
-                          Atender
-                          <ArrowRight className="ml-1 h-3 w-3" />
+                    <DialogFooter className="pt-4">
+                      <DialogClose asChild>
+                        <Button type="button" variant="outline">
+                          Cancelar
                         </Button>
-                      )}
-                    </TableCell>
+                      </DialogClose>
+
+                      <Button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="bg-primary hover:bg-primary/80 text-primary-foreground"
+                      >
+                        {isSubmitting ? "Salvando..." : "Criar Agendamento"}
+                      </Button>
+                    </DialogFooter>
+                  </form>
+                </Form>
+              </DialogContent>
+            </Dialog>
+          )}
+        </div>
+
+        {/* Navegação de Data */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigateDate("prev")}
+              className="h-8 w-8"
+            >
+              <ChevronLeft className="h-4 w-4 text-primary" />
+            </Button>
+
+            <h2 className="text-lg font-semibold text-primary">
+              {formatarDataCompleta(selectedDate).toUpperCase()}
+            </h2>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigateDate("next")}
+              className="h-8 w-8"
+            >
+              <ChevronRight className="h-4 w-4 text-primary" />
+            </Button>
+          </div>
+
+          {/* Troca de visualização */}
+          <div className="flex items-center gap-2 bg-primary/50">
+            <Button
+              size="sm"
+              variant={viewMode === "lista" ? "default" : "ghost"}
+              className={
+                viewMode === "lista"
+                  ? "bg-primary text-primary-foreground hover:bg-primary/80"
+                  : ""
+              }
+              onClick={() => setViewMode("lista")}
+            >
+              Lista
+            </Button>
+
+            <Button
+              size="sm"
+              variant={viewMode === "dia" ? "default" : "ghost"}
+              className={
+                viewMode === "dia"
+                  ? "bg-primary text-primary-foreground hover:bg-primary/80"
+                  : ""
+              }
+              onClick={() => setViewMode("dia")}
+            >
+              Dia
+            </Button>
+
+            <Button
+              size="sm"
+              variant={viewMode === "semana" ? "default" : "ghost"}
+              className={
+                viewMode === "semana"
+                  ? "bg-primary text-primary-foreground hover:bg-primary/80"
+                  : ""
+              }
+              onClick={() => setViewMode("semana")}
+            >
+              Semana
+            </Button>
+          </div>
+        </div>
+
+        {/* Filtros */}
+        <div className="flex items-center gap-4 flex-wrap">
+          <span className="text-sm text-muted-foreground text-purple-800">Filtrar por</span>
+
+          <Select value={filtroStatus} onValueChange={setFiltroStatus}>
+            <SelectTrigger className="w-[150px]">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos os Status</SelectItem>
+              {statusOptions.map((opt) => (
+                <SelectItem key={opt.value} value={opt.value}>
+                  {opt.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          {session?.user.role !== "psicologo" && (
+            <>
+              <Select
+                value={filtroPsicologo}
+                onValueChange={setFiltroPsicologo}
+              >
+                <SelectTrigger className="w-[150px]">
+                  <SelectValue placeholder="Psicólogo" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos os Psicólogos</SelectItem>
+                  {psicologos.map((ps) => (
+                    <SelectItem key={ps.id} value={ps.id}>
+                      {ps.nome_completo}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select value={filtroPaciente} onValueChange={setFiltroPaciente}>
+                <SelectTrigger className="w-[150px]">
+                  <SelectValue placeholder="Paciente" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos os Pacientes</SelectItem>
+                  {pacientes.map((pac) => (
+                    <SelectItem key={pac.id} value={pac.id}>
+                      {pac.profiles?.nome_completo || "N/A"}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </>
+          )}
+
+          {(filtroStatus !== "all" ||
+            filtroPsicologo !== "all" ||
+            filtroPaciente !== "all") && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setFiltroStatus("all");
+                setFiltroPaciente("all");
+                setFiltroPsicologo("all");
+              }}
+            >
+              Limpar Filtros
+            </Button>
+          )}
+        </div>
+
+        <div className="rounded-lg bg-card shadow-sm">
+          <Table className="border border-primary/30 rounded-lg">
+            <TableHeader>
+              <TableRow className="bg-primary/10 border-c border-primary/30">
+                <TableHead className="text-primary font-semibold">
+                  Horário
+                </TableHead>
+                <TableHead className="text-primary font-semibold">
+                  Atendimento
+                </TableHead>
+                <TableHead className="text-primary font-semibold">
+                  Chegada
+                </TableHead>
+                <TableHead className="text-primary font-semibold">
+                  Status
+                </TableHead>
+                <TableHead className="text-primary font-semibold">
+                  Profissional
+                </TableHead>
+                <TableHead className="text-primary font-semibold">
+                  Paciente
+                </TableHead>
+                <TableHead className="w-[100px]"></TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-          
-          {/* Rodapé com Total */}
+            </TableHeader>
+
+            <TableBody>
+              {agendamentosFiltrados.map((ag) => (
+                <TableRow
+                  key={ag.id}
+                  className="hover:bg-primary/5 transition-colors border-b border-border"
+                >
+                  <TableCell className="text-foreground">
+                    {formatarHora(ag.data_hora)}
+                  </TableCell>
+
+                  <TableCell className="text-foreground">
+                    {ag.status === "em_atendimento"
+                      ? "Em Atendimento"
+                      : "Consulta"}
+                  </TableCell>
+
+                  <TableCell className="text-foreground">—</TableCell>
+
+                  {/* Status badge */}
+                  <TableCell>
+                    <span className="px-2 py-1 rounded-md text-xs font-medium bg-primary/10 text-primary border border-primary/30">
+                      {statusLabels[ag.status]}
+                    </span>
+                  </TableCell>
+
+                  <TableCell className="text-foreground">
+                    {ag.psicologo_nome}
+                  </TableCell>
+
+                  <TableCell className="text-foreground flex items-center gap-2">
+                    <Avatar className="h-7 w-7">
+                      <AvatarFallback>
+                        {getInitials(ag.paciente_nome || "")}
+                      </AvatarFallback>
+                    </Avatar>
+                    {ag.paciente_nome}
+                  </TableCell>
+
+                  <TableCell className="text-right">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                          <ChevronDown className="w-4 h-4 text-primary" />
+                        </Button>
+                      </DropdownMenuTrigger>
+
+                      <DropdownMenuContent
+                        align="end"
+                        className="bg-card border-primary/30"
+                      >
+                        {statusOptions.map((opt) => (
+                          <DropdownMenuItem
+                            key={opt.value}
+                            onClick={() => handleStatusChange(ag.id, opt.value)}
+                            className="text-foreground hover:bg-primary/10 hover:text-primary"
+                          >
+                            {opt.label}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Avatar className="h-6 w-6">
+                        <AvatarFallback className="text-xs bg-[#E3F2FD] text-[#007BFF]">
+                          {getInitials(ag.psicologo_nome || "N/A")}
+                        </AvatarFallback>
+                      </Avatar>
+                      <span className="text-sm">
+                        {ag.psicologo_nome || "N/A"}
+                      </span>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Avatar className="h-6 w-6">
+                        <AvatarFallback className="text-xs bg-[#E3F2FD] text-[#007BFF]">
+                          {getInitials(ag.paciente_nome || "N/A")}
+                        </AvatarFallback>
+                      </Avatar>
+                      <span className="text-sm">
+                        {ag.paciente_nome || "N/A"}
+                      </span>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    {ag.status !== "concluido" && ag.status !== "cancelado" && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleAtender(ag.id)}
+                        className="border-[#007BFF] text-[#007BFF] hover:bg-[#E3F2FD] h-7"
+                      >
+                        Atender
+                        <ArrowRight className="ml-1 h-3 w-3" />
+                      </Button>
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+
           <div className="border-t bg-gray-50 px-4 py-3 flex justify-end items-center">
             <div className="flex items-center gap-4">
               <span className="text-sm font-medium text-gray-700">Total</span>
-              <span className="text-sm font-bold text-gray-900">{agendamentosFiltrados.length}</span>
+              <span className="text-sm font-bold text-gray-900">
+                {agendamentosFiltrados.length}
+              </span>
             </div>
           </div>
+        </div>
       </div>
-    </div>
-  </DashboardLayout>
-);
+    </DashboardLayout>
+  );
 }

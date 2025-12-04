@@ -236,8 +236,8 @@ export default function Pacientes() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Pacientes</h1>
-            <p className="text-muted-foreground">
+            <h1 className="text-3xl font-bold text-primary/90 tracking-tight">Pacientes</h1>
+            <p className=" text-primary/90">
               Gerencie os pacientes cadastrados na clínica
               {pacientes.length > 0 && (
                 <span className="ml-2 font-semibold text-foreground">
@@ -256,7 +256,7 @@ export default function Pacientes() {
               }
             }}>
               <DialogTrigger asChild>
-                <Button onClick={handleNovoPaciente} className="bg-[#28A745] hover:bg-[#218838] text-white">
+                <Button onClick={handleNovoPaciente} className="bg-primary/90 text-white">
                   <PlusCircle className="mr-2 h-4 w-4" />
                   Novo Paciente
                 </Button>
@@ -443,7 +443,6 @@ export default function Pacientes() {
 
         </div>
 
-        {/* Tabela de Pacientes (sem alteração, mas agora deve funcionar) */}
         <div className="rounded-lg border bg-card">
           <Table>
             <TableHeader>

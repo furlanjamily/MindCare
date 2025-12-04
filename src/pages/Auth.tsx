@@ -101,7 +101,7 @@ export default function Auth() {
                 required
               />
             </div>
-            <Button type="submit" className="w-full bg-[#007BFF] hover:bg-[#0056B3] text-white" disabled={loading}>
+            <Button type="submit" className="w-full bg-primary/90 text-white" disabled={loading}>
               {loading ? "Entrando..." : "Entrar"}
             </Button>
           </form>
